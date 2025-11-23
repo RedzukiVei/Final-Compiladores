@@ -1,0 +1,9 @@
+int a;
+float b;
+char c;
+
+int suma(int x, int y) {
+    int resultado;
+    resultado = x + y;
+    return resultado;
+}
