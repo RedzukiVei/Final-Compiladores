@@ -1,7 +1,6 @@
 #ifndef TOKENS_H
 #define TOKENS_H
 
-// Estructura original del token (para el lexer)
 typedef struct {
     char tipo[30];
     char valor[100];
@@ -56,14 +55,13 @@ typedef enum {
     TOKEN_UNKNOWN    // Token no reconocido
 } TokenType;
 
-// Estructura del token para el parser
 typedef struct {
-    TokenType type;      // Tipo enumerado del token
-    char lexeme[100];    // Texto del token
-    int line;            // Número de línea
+    TokenType type;      
+    char lexeme[100];    
+    int line;            
 } ParserToken;
 
-// Nombres de los tokens para debugging/mensajes de error
+
 static const char* TokenTypeNames[] = {
     "IF", "ELSE", "WHILE", "FOR",
     "INT", "FLOAT", "CHAR", "RETURN",
@@ -74,7 +72,7 @@ static const char* TokenTypeNames[] = {
     "EOF", "ERROR", "UNKNOWN"
 };
 
-// Función auxiliar para obtener el nombre de un token (opcional, útil para debugging)
+
 static inline const char* getTokenName(TokenType type) {
     if (type >= 0 && type <= TOKEN_UNKNOWN) {
         return TokenTypeNames[type];
@@ -82,4 +80,4 @@ static inline const char* getTokenName(TokenType type) {
     return "INVALID";
 }
 
-#endif // TOKENS_H
+#endif 
