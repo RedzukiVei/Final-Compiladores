@@ -1,67 +1,53 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <stdio.h>
+#include <vector>
+#include <string>
 #include "tokens.h"
 
+class Parser {
+private:
+    std::vector<Token> tokens;
+    size_t pos;
+    std::vector<std::string> errores;
+    bool hayError;
+    
+    Token tokenActual();
+    Token avanzar();
+    bool coincidir(const std::string& tipoEsperado);
+    void registrarError(const std::string& mensaje);
+    void sincronizar(const std::vector<std::string>& siguientes);
+    
+    // ------------------------------------------------------------
+    // Funciones para cada no-terminal de la gramática
+    // ------------------------------------------------------------
+    void programa();
+    void declaraciones();
+    void declaracion();
+    void tipo();
+    void sentencias();
+    void sentencia();
+    void sentenciaIf();
+    void sentenciaWhile();
+    void sentenciaFor();
+    void sentenciaAsignacion();
+    void sentenciaPrint();
+    void expresion();
+    void expresionLogica();
+    void expresionLogicaPrima();
+    void expresionRelacional();
+    void expresionRelacionalPrima();
+    void expresionAditiva();
+    void expresionAditivaPrima();
+    void expresionMultiplicativa();
+    void expresionMultiplicativaPrima();
+    void factor();
+    void operadorRelacional();
+    
+public:
+    Parser(const std::vector<Token>& tokens);
+    bool analizar();
+    void mostrarErrores();
+};
 
-extern ParserToken currentToken;
-extern int parseErrors;
-extern FILE* sourceFile;
-
-
-extern char* yytext;
-extern int linea;
-extern FILE* yyin;
-
-
-void initParser(FILE* input);
-int parse();
-
-
-void nextToken();
-void match(TokenType expected);
-void syntaxError(const char* message);
-TokenType mapTokenType(const char* tipo);
-TokenType mapKeyword(const char* lexeme);
-
-void program();
-void declaration_list();
-void declaration_list_prime();
-void declaration();
-void declaration_tail();
-void params_opt();
-void type();
-void params();
-void param_list_prime();
-void param();
-void compound_stmt();
-void local_declarations();
-void var_declaration();
-void var_decl_tail();
-void statement_list();
-void statement();
-void expression_stmt();
-void selection_stmt();
-void selection_stmt_tail();
-void iteration_stmt();
-void return_stmt();
-void return_tail();
-void expression();
-void expression_prime();
-void simple_expression();
-void simple_expression_prime();
-void relop();
-void additive_expression();
-void additive_expression_prime();
-void addop();
-void term();
-void term_prime();
-void mulop();
-void factor();
-void factor_tail();
-void args_opt();
-void args();
-void args_prime();
-
-#endif 
+#endif

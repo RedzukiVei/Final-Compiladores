@@ -4,65 +4,57 @@
 #include "tokens.h"
 
 int linea = 1;
-char lastTokenType[30];  // Para comunicar el tipo al parser
-char lastTokenValue[100]; // Para guardar el valor del token
-
-void guardarToken(const char* tipo, const char* valor);
+extern int agregarToken(const char* tipo, const char* valor, int linea);
 %}
 
 %%
 
-"if"        { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_IF; }
-"else"      { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_ELSE; }
-"while"     { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_WHILE; }
-"for"       { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_FOR; }
-"int"       { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_INT; }
-"float"     { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_FLOAT; }
-"char"      { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_CHAR; }
-"return"    { guardarToken("PALABRA_CLAVE", yytext); return TOKEN_RETURN; }
+"if"        { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"else"      { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"while"     { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"for"       { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"int"       { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"float"     { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"char"      { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"string"    { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"return"    { agregarToken("PALABRA_CLAVE", yytext, linea); }
+"print"     { agregarToken("PALABRA_CLAVE", yytext, linea); }
 
-[0-9]+                          { guardarToken("NUMERO_DECIMAL", yytext); return TOKEN_NUM_DEC; }
-0[xX][0-9A-Fa-f]+               { guardarToken("NUMERO_HEX", yytext); return TOKEN_NUM_HEX; }
-[0-9]+"."[0-9]+                 { guardarToken("NUMERO_REAL", yytext); return TOKEN_NUM_REAL; }
+"&&"        { agregarToken("AND", yytext, linea); }
+"||"        { agregarToken("OR", yytext, linea); }
 
-\"([^"\\]|\\.)*\"               { guardarToken("CADENA", yytext); return TOKEN_STRING; }
-[a-zA-Z_][a-zA-Z0-9_]*          { guardarToken("IDENTIFICADOR", yytext); return TOKEN_ID; }
+0[xX][0-9A-Fa-f]+               { agregarToken("NUMERO_HEX", yytext, linea); }
+[0-9]+"."[0-9]+                 { agregarToken("NUMERO_REAL", yytext, linea); }
+[0-9]+                          { agregarToken("NUMERO_DECIMAL", yytext, linea); }
 
-"=="        { guardarToken("IGUALDAD", yytext); return TOKEN_EQ; }
-"!="        { guardarToken("DISTINTO", yytext); return TOKEN_NEQ; }
-"<="        { guardarToken("MENOR_IGUAL", yytext); return TOKEN_LE; }
-">="        { guardarToken("MAYOR_IGUAL", yytext); return TOKEN_GE; }
-"="         { guardarToken("ASIGNACION", yytext); return TOKEN_ASSIGN; }
-"<"         { guardarToken("MENOR", yytext); return TOKEN_LT; }
-">"         { guardarToken("MAYOR", yytext); return TOKEN_GT; }
+\"([^"\\]|\\.)*\"               { agregarToken("CADENA", yytext, linea); }
+[a-zA-Z_][a-zA-Z0-9_]*          { agregarToken("IDENTIFICADOR", yytext, linea); }
 
-"+"         { guardarToken("MAS", yytext); return TOKEN_PLUS; }
-"-"         { guardarToken("MENOS", yytext); return TOKEN_MINUS; }
-"*"         { guardarToken("MULT", yytext); return TOKEN_MULT; }
-"/"         { guardarToken("DIV", yytext); return TOKEN_DIV; }
+"=="        { agregarToken("IGUALDAD", yytext, linea); }
+"!="        { agregarToken("DISTINTO", yytext, linea); }
+"<="        { agregarToken("MENOR_IGUAL", yytext, linea); }
+">="        { agregarToken("MAYOR_IGUAL", yytext, linea); }
+"="         { agregarToken("ASIGNACION", yytext, linea); }
+"<"         { agregarToken("MENOR", yytext, linea); }
+">"         { agregarToken("MAYOR", yytext, linea); }
 
-";"         { guardarToken("PUNTO_Y_COMA", yytext); return TOKEN_SEMICOLON; }
-","         { guardarToken("COMA", yytext); return TOKEN_COMMA; }
-"("         { guardarToken("PAREN_IZQ", yytext); return TOKEN_LPAREN; }
-")"         { guardarToken("PAREN_DER", yytext); return TOKEN_RPAREN; }
-"{"         { guardarToken("LLAVE_IZQ", yytext); return TOKEN_LBRACE; }
-"}"         { guardarToken("LLAVE_DER", yytext); return TOKEN_RBRACE; }
+"+"         { agregarToken("MAS", yytext, linea); }
+"-"         { agregarToken("MENOS", yytext, linea); }
+"*"         { agregarToken("MULT", yytext, linea); }
+"/"         { agregarToken("DIV", yytext, linea); }
 
-[ \t\r]+    ;    /* ignora espacios */
+";"         { agregarToken("PUNTO_Y_COMA", yytext, linea); }
+","         { agregarToken("COMA", yytext, linea); }
+"("         { agregarToken("PAREN_IZQ", yytext, linea); }
+")"         { agregarToken("PAREN_DER", yytext, linea); }
+"{"         { agregarToken("LLAVE_IZQ", yytext, linea); }
+"}"         { agregarToken("LLAVE_DER", yytext, linea); }
+
+[ \t\r]+    ;    
 \n          { linea++; }
 
-"//".*      ;    /* ignora comentarios de línea */
-
-.           { guardarToken("ERROR", yytext); return TOKEN_ERROR; }
+.           { agregarToken("ERROR", yytext, linea); }
 
 %%
 
-void guardarToken(const char* tipo, const char* valor) {
-    strcpy(lastTokenType, tipo);
-    strcpy(lastTokenValue, valor);
-    printf("[LINEA %d] %-15s %s\n", linea, tipo, valor);
-}
-
-int yywrap() { 
-    return 1; 
-}
+int yywrap() { return 1; }
