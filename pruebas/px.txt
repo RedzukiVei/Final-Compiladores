@@ -1,0 +1,7 @@
+int a = 10
+float b = 20.5
+string c = "texto"
+if (a > b {
+    print(a)
+    print(b)
+}

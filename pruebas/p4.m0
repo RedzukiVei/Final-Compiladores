@@ -1,0 +1,5 @@
+int x = 5
+float y = 3
+if (x > y {
+    print(x)
+}

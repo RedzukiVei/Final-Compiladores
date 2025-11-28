@@ -1,0 +1,12 @@
+int edad = 25;
+string nombre = "Maria";
+float salario = 1500;
+
+if (edad >= 18) {
+    print(salario);
+} else {
+    print(edad);
+}
+
+int total = 100 + 200;
+print(total);

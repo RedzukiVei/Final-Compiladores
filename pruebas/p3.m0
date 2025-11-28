@@ -1,0 +1,4 @@
+int resultado = 10 + 5 * 3;
+if (resultado >= 20) {
+    print(resultado);
+}

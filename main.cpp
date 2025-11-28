@@ -1,79 +1,56 @@
-#define _TIMESPEC_DEFINED 1
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
 #include <iostream>
-#include "tokens.h"
+#include <cstdio>
+#include <cstring>
 #include "parser.h"
 
+extern int lookahead;
 extern FILE* yyin;
 int yylex();
 
-std::vector<Token> listaTokens;
-bool hayErrorLexico = false;
-
-extern "C" int agregarToken(const char* tipo, const char* valor, int linea) {
-    Token t;
-    strncpy(t.tipo, tipo, 29);
-    t.tipo[29] = '\0';
-    strncpy(t.valor, valor, 99);
-    t.valor[99] = '\0';
-    t.linea = linea;
-    
-    listaTokens.push_back(t);
-    
-    if (std::string(tipo) == "ERROR") {
-        hayErrorLexico = true;
+bool validarExtension(const char* nombreArchivo) {
+    const char* extension = strrchr(nombreArchivo, '.');
+    if (extension == NULL) {
+        return false;
     }
-    
-    return 0;
+    return strcmp(extension, ".m0") == 0;
 }
 
 int main(int argc, char* argv[]) {
+
     if (argc < 2) {
-        fprintf(stderr, "Uso: %s <archivo.m0>\n", argv[0]);
+        std::cerr << "Uso: ./parser <archivo.m0>" << std::endl;
+        return 1;
+    }
+    // ------------------------------------------------------------
+    // Validar que el archivo tenga extensión .m0
+    // ------------------------------------------------------------
+    if (!validarExtension(argv[1])) {
+        std::cerr << "Error: El archivo debe tener extensión .m0" << std::endl;
+        std::cerr << "Archivo proporcionado: " << argv[1] << std::endl;
         return 1;
     }
 
     yyin = fopen(argv[1], "r");
     if (!yyin) {
-        perror("No se pudo abrir el archivo");
+        std::cerr << "Error: No se pudo abrir el archivo '" << argv[1] << "'" << std::endl;
         return 1;
     }
+
+    lookahead = yylex();   // Primer token
+
     // ------------------------------------------------------------
-    // Fase 1: Análisis Léxico
+    // Ejecutar el parser
     // ------------------------------------------------------------
-    yylex();
-    fclose(yyin);
-    
-    // Verificar errores léxicos
-    if (hayErrorLexico) {
-        std::cerr << "\n=== ERRORES LÉXICOS DETECTADOS ===\n\n";
-        for (const auto& token : listaTokens) {
-            if (std::string(token.tipo) == "ERROR") {
-                std::cerr << "Error en línea " << token.linea 
-                         << ": Token no reconocido '" << token.valor << "'\n";
-            }
-        }
-        std::cerr << "\n=== ANÁLISIS ABORTADO ===\n";
+    program();
+
+    // Verificar si hubo errores
+    if (tieneErrores()) {
+        mostrarErrores();  // Mostrar lista completa de errores
+        fclose(yyin);
         return 1;
+    } else {
+        std::cout << "Análisis sintáctico exitoso" << std::endl;
+        fclose(yyin);
+        return 0;
     }
-    
-    // ------------------------------------------------------------
-    // Fase 2: Análisis Sintáctico
-    // ------------------------------------------------------------
-    Parser parser(listaTokens);
-    bool exitoso = parser.analizar();
-    
-    if (!exitoso) {
-        parser.mostrarErrores();
-        std::cerr << "\n=== ANÁLISIS SINTÁCTICO FALLIDO ===\n";
-        return 1;
-    }
-    
-    
-    std::cout << "\n=== ANÁLISIS SINTÁCTICO EXITOSO ===\n";
-    std::cout << "El programa es sintácticamente correcto.\n";
-    
-    return 0;
 }
