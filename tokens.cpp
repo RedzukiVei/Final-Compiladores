@@ -1,4 +1,4 @@
 #include "tokens.h"
 
-// Definir SOLO lo que no genera Flex:
 YYSTYPE yylval;
+// tokenLinea se define en mini.l

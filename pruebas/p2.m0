@@ -1,8 +1,19 @@
-int a = 5;
-int b = 10;
-if (a == b) {
-    print(a);
-}
-if (a != b) {
-    print(b);
-}
+fun suma(a: int, b: int): int
+    resultado: int
+    resultado = a + b
+    return resultado
+end
+
+fun esPar(n: int): bool
+    if n = 0
+        return true
+    else
+        return false
+    end
+end
+
+fun main(): int
+    x: int
+    x = suma(5, 3)
+    return 0
+end

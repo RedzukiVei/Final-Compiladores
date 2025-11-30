@@ -1,7 +1,14 @@
-int a = 10
-float b = 20.5
-string c = "texto"
-if (a > b {
-    print(a)
-    print(b)
-}
+fun error1(a int): int
+    return 0
+end
+
+fun error2(): bool
+    if true
+        return true
+end
+
+variable int
+
+fun error3: int
+    return 0
+end

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+#include "tokens.h"
 #include "parser.h"
 
 extern int lookahead;
@@ -16,16 +17,13 @@ bool validarExtension(const char* nombreArchivo) {
 }
 
 int main(int argc, char* argv[]) {
-
     if (argc < 2) {
         std::cerr << "Uso: ./parser <archivo.m0>" << std::endl;
         return 1;
     }
-    // ------------------------------------------------------------
-    // Validar que el archivo tenga extensión .m0
-    // ------------------------------------------------------------
+
     if (!validarExtension(argv[1])) {
-        std::cerr << "Error: El archivo debe tener extensión .m0" << std::endl;
+        std::cerr << "Error: El archivo debe tener extension .m0" << std::endl;
         std::cerr << "Archivo proporcionado: " << argv[1] << std::endl;
         return 1;
     }
@@ -36,20 +34,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    lookahead = yylex();   // Primer token
+    extern int lookahead;
+    lookahead = yylex();
 
-    // ------------------------------------------------------------
-    // Ejecutar el parser
-    // ------------------------------------------------------------
-    program();
+    programa();
 
-    // Verificar si hubo errores
     if (tieneErrores()) {
-        mostrarErrores();  // Mostrar lista completa de errores
+        mostrarErrores();
         fclose(yyin);
         return 1;
     } else {
-        std::cout << "Análisis sintáctico exitoso" << std::endl;
+        std::cout << "Analisis sintactico exitoso" << std::endl;
         fclose(yyin);
         return 0;
     }

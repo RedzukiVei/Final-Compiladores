@@ -1,4 +1,94 @@
-int resultado = 10 + 5 * 3;
-if (resultado >= 20) {
-    print(resultado);
-}
+contador: int
+maximo: int
+
+fun factorial(n: int): int
+    if n <= 1
+        return 1
+    else
+        return n * factorial(n - 1)
+    end
+end
+
+fun fibonacci(n: int): int
+    a: int
+    b: int
+    temp: int
+    i: int
+    
+    if n <= 0
+        return 0
+    else if n = 1
+        return 1
+    end
+    
+    a = 0
+    b = 1
+    i = 2
+    
+    while i <= n
+        temp = a + b
+        a = b
+        b = temp
+        i = i + 1
+    loop
+    
+    return b
+end
+
+fun esPrimo(n: int): bool
+    i: int
+    
+    if n < 2
+        return false
+    end
+    
+    i = 2
+    while i * i <= n
+        if n - (n / i) * i = 0
+            return false
+        end
+        i = i + 1
+    loop
+    
+    return true
+end
+
+fun main(): int
+    resultado: int
+    bandera: bool
+    mensaje: string
+    
+    contador = 0
+    maximo = 100
+    
+    // Probar factorial
+    resultado = factorial(5)
+    
+    // Probar fibonacci
+    resultado = fibonacci(10)
+    
+    // Probar esPrimo
+    bandera = esPrimo(17)
+    
+    // Expresiones complejas
+    resultado = (5 + 3) * 2 - 10 / 2
+    bandera = true and false or not false
+    bandera = 5 > 3 and 10 <= 20
+    
+    // Operadores de comparacion
+    if resultado = 0
+        mensaje = "cero"
+    else if resultado <> 0
+        mensaje = "no cero"
+    end
+    
+    // Hexadecimales
+    resultado = 0xFF
+    resultado = 0x1A2B
+    
+    // Negativos
+    resultado = -42
+    bandera = not true
+    
+    return 0
+end
